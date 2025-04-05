@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile List - Fruit Chats</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col p-4 w-full">
+
+  <!-- Top Navbar with Language Dropdown -->
+  <div class="w-full bg-green-500 text-white flex items-center justify-between px-6 py-3 shadow-md">
+    <div class="relative">
+      <span class="text-xl">🌍 Language</span>
+      <!-- Transparent select covers the area for easy interaction -->
+      <select id="language-selector" class="absolute left-0 top-0 w-full h-full opacity-0 cursor-pointer">
+        <option value="en">English</option>
+        <option value="mr">मराठी</option>
+      </select>
+    </div>
+    <span class="text-xl cursor-pointer">⚙️</span>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="w-full bg-white rounded-full flex items-center p-2 shadow-md mt-4">
+    <svg class="w-5 h-5 text-gray-500 mx-2" xmlns="http://www.w3.org/2000/svg" fill="none" 
+         viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            d="M15 15l5 5m-5-5a7 7 0 1 0-10 0 7 7 0 0 0 10 0z" />
+    </svg>
+    <input type="text" id="search" placeholder="Search" class="w-full outline-none bg-transparent">
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="w-full flex justify-around mt-4">
+    <button id="filter-all" class="filter-tab bg-blue-500 text-white px-4 py-2 rounded-full">All</button>
+    <button id="filter-unread" class="filter-tab text-gray-600 px-4 py-2">Unread</button>
+    <button id="filter-read" class="filter-tab text-gray-600 px-4 py-2">Read</button>
+    <button id="filter-pinned" class="filter-tab text-gray-600 px-4 py-2">Pinned</button>
+  </div>
+
+  <!-- Profile List -->
+  <div id="profile-list" class="w-full mt-4 bg-white p-4 rounded-lg shadow-md space-y-4">
+    <!-- Profiles will be loaded here dynamically -->
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="w-full fixed bottom-0 bg-white shadow-md p-3 flex justify-around">
+    <button class="flex flex-col items-center text-gray-600">
+      <span><a href="./farmerWeb.html">🏠</a></span>
+      <span id="nav-home" class="text-xs">Home</span>
+    </button>
+    <button class="flex flex-col items-center text-gray-600">
+      <span><a href="post.html">📝</a></span>
+      <span id="nav-post" class="text-xs"><a href="post.html">Post</a></span>
+    </button>
+    <button class="flex flex-col items-center text-gray-600">
+      <span><a href="./farmerCht.html">💬</a></span>
+      <span id="nav-chat" class="text-xs">Chat</span>
+    </button>
+    <button class="flex flex-col items-center text-green-500">
+      <span><a href="./farmerAccount.html">👤</a></span>
+      <span id="nav-account" class="text-xs">Account</span>
+    </button>
+  </div>
+
+  <script>
+    // Sample profile data with fruit-related conversations
+    const profiles = [
+      { name: "Amit Sharma", message: "Mango is the king of fruits! Do you agree?", time: "10 min", unread: true, img: "https://randomuser.me/api/portraits/men/20.jpg" },
+      { name: "Priya Verma", message: "I love bananas! They're perfect for breakfast.", time: "15 min", unread: false, img: "https://randomuser.me/api/portraits/women/22.jpg" },
+      { name: "Ravi Kumar", message: "Do you prefer red apples or green apples?", time: "20 min", unread: true, img: "https://randomuser.me/api/portraits/men/25.jpg" },
+      { name: "Sanya Gupta", message: "Watermelons are the best in summer! So refreshing!", time: "25 min", unread: false, img: "https://randomuser.me/api/portraits/women/30.jpg" },
+      { name: "Vikram Singh", message: "Pineapples on pizza? Yes or no? 😂", time: "30 min", unread: true, img: "https://randomuser.me/api/portraits/men/28.jpg" },
+      { name: "Neha Joshi", message: "Strawberries go so well with chocolate! 🍓🍫", time: "40 min", unread: false, img: "https://randomuser.me/api/portraits/women/35.jpg" },
+      { name: "Anil Yadav", message: "Have you tried dragon fruit? It looks amazing!", time: "45 min", unread: true, img: "https://randomuser.me/api/portraits/men/38.jpg" }
+    ];
+
+    // Function to render profiles
+    function renderProfiles(filter = "All") {
+      const list = document.getElementById("profile-list");
+      list.innerHTML = ""; // Clear list
+
+      profiles.forEach(profile => {
+        if (filter === "Unread" && !profile.unread) return;
+        if (filter === "Read" && profile.unread) return;
+
+        list.innerHTML += `
+          <div class="flex items-center space-x-4 border-b pb-2">
+              <img src="${profile.img}" class="w-12 h-12 rounded-full">
+              <div class="flex-1">
+                  <h3 class="font-semibold">${profile.name}</h3>
+                  <p class="text-gray-500 text-sm">${profile.message}</p>
+              </div>
+              <div class="text-right">
+                  <p class="text-gray-400 text-xs">${profile.time}</p>
+                  ${profile.unread ? '<span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">2</span>' : ''}
+              </div>
+          </div>
+        `;
+      });
+    }
+
+    // Handle filter button clicks
+    document.querySelectorAll(".filter-tab").forEach(button => {
+      button.addEventListener("click", function () {
+        document.querySelectorAll(".filter-tab").forEach(btn => btn.classList.remove("bg-blue-500", "text-white"));
+        this.classList.add("bg-blue-500", "text-white");
+        renderProfiles(this.textContent);
+      });
+    });
+
+    // Handle search
+    document.getElementById("search").addEventListener("input", function () {
+      const query = this.value.toLowerCase();
+      document.querySelectorAll("#profile-list div").forEach(profile => {
+        profile.style.display = profile.innerText.toLowerCase().includes(query) ? "flex" : "none";
+      });
+    });
+
+    // Load profiles on page load
+    renderProfiles();
+
+    // Language translations for filter tabs and bottom navigation
+    const translations = {
+      en: {
+        filterAll: "All",
+        filterUnread: "Unread",
+        filterRead: "Read",
+        filterPinned: "Pinned",
+        navHome: "Home",
+        navPost: "Post",
+        navChat: "Chat",
+        navAccount: "Account"
+      },
+      mr: {
+        filterAll: "सर्व",
+        filterUnread: "वाचले नाही",
+        filterRead: "वाचले",
+        filterPinned: "पिन केले",
+        navHome: "मुख्यपृष्ठ",
+        navPost: "पोस्ट",
+        navChat: "चॅट",
+        navAccount: "खाते"
+      }
+    };
+
+    function changeLanguage(lang) {
+      document.getElementById("filter-all").innerText = translations[lang].filterAll;
+      document.getElementById("filter-unread").innerText = translations[lang].filterUnread;
+      document.getElementById("filter-read").innerText = translations[lang].filterRead;
+      document.getElementById("filter-pinned").innerText = translations[lang].filterPinned;
+      document.getElementById("nav-home").innerText = translations[lang].navHome;
+      document.getElementById("nav-post").innerText = translations[lang].navPost;
+      document.getElementById("nav-chat").innerText = translations[lang].navChat;
+      document.getElementById("nav-account").innerText = translations[lang].navAccount;
+    }
+
+    document.getElementById("language-selector").addEventListener("change", function () {
+      changeLanguage(this.value);
+    });
+
+    // Set default language to English
+    changeLanguage("en");
+  </script>
+
+</body>
+</html>
