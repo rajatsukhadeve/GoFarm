@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_fruit'])) {
     $name = $_POST['name'];
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
-    $unit = $_POST['unit'];
+   
     $image = $_POST['image']; // Assuming image path is provided
     $info = isset($_POST['info']) ? $_POST['info'] : ''; // Default to empty string if not set
     $videopath = isset($_POST['videopath']) ? $_POST['videopath'] : ''; // Default to empty string if not set
@@ -117,7 +117,7 @@ $conn->close();
                 <input type="text" name="name" placeholder="vegitablee" class="w-full border p-2 mb-2 rounded" required>
                 <input type="text" name="price" placeholder="Price (₹)" class="w-full border p-2 mb-2 rounded" required>
                 <input type="text" name="quantity" placeholder="Quantity" class="w-full border p-2 mb-2 rounded" required>
-                <input type="text" name="unit" placeholder="Unit (e.g., per Litre, per KG)" class="w-full border p-2 mb-2 rounded" required>
+              
                 <input type="text" name="image" placeholder="Image URL" class="w-full border p-2 mb-4 rounded" required>
                 <input type="text" name="info" placeholder="Additional Info" class="w-full border p-2 mb-4 rounded"> <!-- Optional field -->
                 <input type="text" name="videopath" placeholder="Video Path" class="w-full border p-2 mb-4 rounded"> <!-- Optional field -->

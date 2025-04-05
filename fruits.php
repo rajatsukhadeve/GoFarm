@@ -117,9 +117,9 @@ $conn->close();
                 <input type="text" name="name" placeholder="Oil Name" class="w-full border p-2 mb-2 rounded" required>
                 <input type="text" name="price" placeholder="Price (₹)" class="w-full border p-2 mb-2 rounded" required>
                 <input type="text" name="quantity" placeholder="Quantity" class="w-full border p-2 mb-2 rounded" required>
-                <input type="text" name="unit" placeholder="Unit (e.g., per Litre, per KG)" class="w-full border p-2 mb-2 rounded" required>
+                <input type="text" name="unit" placeholder="info (e.g., per Litre, per KG)" class="w-full border p-2 mb-2 rounded" required>
                 <input type="text" name="image" placeholder="Image URL" class="w-full border p-2 mb-4 rounded" required>
-                <input type="text" name="info" placeholder="Additional Info" class="w-full border p-2 mb-4 rounded"> <!-- Optional field -->
+                <input type="text" name="info" placeholder="if any problem" class="w-full border p-2 mb-4 rounded"> <!-- Optional field -->
                 <input type="text" name="videopath" placeholder="Video Path" class="w-full border p-2 mb-4 rounded"> <!-- Optional field -->
                 <input type="hidden" name="add_fruit" value="1"> <!-- Hidden field to identify the form submission -->
                 

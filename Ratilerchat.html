@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile List - Fruit Chats</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex flex-col p-4 w-full">
+
+    <!-- Search Bar -->
+    <div class="w-full bg-white rounded-full flex items-center p-3 shadow-lg mb-4">
+        <input type="text" id="search" placeholder="Search for chats..." class="w-full outline-none bg-transparent text-gray-700">
+    </div>
+
+    <!-- Profile List -->
+    <div id="profile-list" class="w-full bg-white p-4 rounded-lg shadow-lg space-y-4 overflow-y-auto flex-1">
+        <!-- Profiles will be loaded here dynamically -->
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="w-full fixed bottom-0 bg-white shadow-lg p-3 flex justify-around">
+        <button onclick="window.location.href='chat.html'" class="text-green-500">💬 Chat</button>
+        <button onclick="window.location.href='call.html'" class="text-green-500">📞 Call</button>
+    </div>
+
+    <script>
+        const profiles = [
+            { name: "Amit Sharma", img: "https://randomuser.me/api/portraits/men/20.jpg" },
+            { name: "Priya Verma", img: "https://randomuser.me/api/portraits/women/22.jpg" },
+            { name: "Ravi Kumar", img: "https://randomuser.me/api/portraits/men/25.jpg" }
+        ];
+
+        function renderProfiles() {
+            const list = document.getElementById("profile-list");
+            list.innerHTML = "";
+            profiles.forEach(profile => {
+                list.innerHTML += `
+                    <div class="flex items-center space-x-4 p-3 bg-green-50 rounded-lg shadow-sm">
+                        <img src="${profile.img}" class="w-14 h-14 rounded-full">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-green-700">${profile.name}</h3>
+                        </div>
+                        <button onclick="startChat('${profile.name}')" class="text-blue-500">💬</button>
+                        <button onclick="startCall('${profile.name}')" class="text-green-500">📞</button>
+                    </div>`;
+            });
+        }
+
+        function startChat(user) {
+            window.location.href = `chat.html?user=${encodeURIComponent(user)}`;
+        }
+
+        function startCall(user) {
+            window.location.href = `call.html?user=${encodeURIComponent(user)}`;
+        }
+
+        renderProfiles();
+    </script>
+</body>
+</html>
