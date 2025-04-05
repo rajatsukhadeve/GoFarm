@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriCentral - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -33,7 +33,7 @@
         <p class="text-sm text-gray-500 mb-6">SMART FARMING FOR ALL</p>
     </div>
 
-    <form>
+    <form id="login-form">
         <div class="mb-4">
             <label class="block text-sm font-semibold mb-2">Name<span class="text-red-500">*</span></label>
             <input type="text" placeholder="Enter your name" id="name" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
@@ -60,15 +60,17 @@
         </div>
 
         <a href="./cosumerWeb.html">
-        <button type="button" onclick="signIn()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-blue-600 transition mt-6 shadow-lg">
-         Sign in 
-        </button>
-    </a>
+            <button type="button" onclick="signIn()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-blue-600 transition mt-6 shadow-lg">
+             Sign in 
+            </button>
+        </a>
     </form>
 </div>
 
 <script>
-async function sendOTP() {
+let generatedOTP = '';
+
+function sendOTP() {
     const mobileNumber = document.getElementById('mobile').value;
 
     if (!mobileNumber) {
@@ -76,64 +78,38 @@ async function sendOTP() {
         return;
     }
 
-    try {
-        const response = await fetch('http://localhost:4000/send-otp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ mobileNumber })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            alert('OTP sent successfully!');
-        } else {
-            alert('Failed to send OTP.');
-        }
-    } catch (err) {
-        alert('Something went wrong!');
-    }
+    // Simulate sending OTP
+    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a random 6-digit OTP
+    alert(`OTP sent successfully! (Simulated OTP: ${generatedOTP})`); // Display the OTP for testing purposes
 }
 
-async function signIn() {
+function signIn() {
     const mobileNumber = document.getElementById('mobile').value;
     const otpInputs = document.querySelectorAll('.otp');
     const otp = Array.from(otpInputs).map(input => input.value).join('');
 
-    // if (!mobileNumber || otp.length !== 6) {
-    //     alert('Enter a valid 6-digit OTP.');
-    //     return;
-    // }
+    if (!mobileNumber || otp.length !== 6) {
+        alert('Enter a valid 6-digit OTP.');
+        return;
+    }
 
-    try {
-        const response = await fetch('http://localhost:4000/verify-otp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ mobileNumber, otp })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            alert('OTP Verified Successfully!');
-            window.location.href = './cosumerWeb.html';
-        } else {
-            alert('Invalid OTP.');
-        }
-    } catch (err) {
-        alert('Server Error!');
+    // Simulate OTP verification
+    if (otp === generatedOTP) {
+        alert('OTP Verified Successfully!');
+        window.location.href = './cosumerWeb.html'; // Redirect to the consumer web page
+    } else {
+        alert('Invalid OTP.');
     }
 }
 
+// Handle OTP input focus
 const otpInputs = document.querySelectorAll('.otp');
 otpInputs.forEach((input, index) => {
     input.addEventListener('input', () => {
         if (input.value.length === 1 && index < otpInputs.length - 1) {
             otpInputs[index + 1].focus();
+        } else if (input.value.length === 0 && index > 0) {
+            otpInputs[index - 1].focus();
         }
     });
 });
