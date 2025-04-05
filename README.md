@@ -1,7 +1,7 @@
-Login
-  ├──→ Farmer
-  │     └──→ Farmer Dashboard
-  │           ├──→ Product
+Login (Logins.html)
+  ├──→ Farmer (loginpsgefarmer.html)
+  │     └──→ Farmer Dashboard (farmerweb.html)
+  │           ├──→ Product 
   │           └──→ Waste Management
   │           └──→Crop Disease Detection
   |            └──→ADD FOR CONSUMER
@@ -10,16 +10,16 @@ Login
   |             └──→Retailer Contact
   |            └──→NEWS
   |             └──→Govt Schemes
- ├──→ Retailer
-  │     └──→ Retailer Dashboard
+ ├──→ Retailer (loginpageretailer.html)
+  │     └──→ Retailer Dashboard (retaileroptions.html)
   │           └──→ Fruits
   |            └──→Vegetable
   |             └──→Waste
   |            └──→Dairy
   |             └──→Spices
   │              └──→Market
-  └──→ Consumer
+  └──→ Consumer (loginpageconsumer)
         └──→ Retailer Dashboard
                     ├──→ Products
                     
-
+you have to start with log in page then after clicking to perticular option youn will be directing to neext page.....
