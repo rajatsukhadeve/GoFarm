@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Selection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes bounceIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-bounce-in {
+            animation: bounceIn 1s ease-out;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center h-screen bg-gradient-to-r from-green-100 to-green-300">
+    
+<div class="text-center border border-black rounded-lg py-16 px-16 bg-white shadow-2xl animate-bounce-in hover:scale-105 transition-transform duration-500">
+    <h2 class="text-3xl font-bold text-red-500 mt-4 ">🌾GO<span class="text-blue-600">FaRm</span></h2>
+    <h1 class="text-4xl font-extrabold text-gray-800 mb-2 animate-pulse">Who are you?</h1>
+    <p class="text-green-600 text-sm mb-8">*Select any one below</p>
+
+    <div class="grid grid-cols-2 gap-8">
+        <a href="./loginpagefarmer.html">
+            <div class="w-32 h-40 bg-white shadow-lg rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-green-200 transition duration-500 transform hover:scale-110" onclick="selectRole('Farmer')">
+                <span class="text-5xl animate-bounce">👨‍🌾</span>
+                <p class="mt-2 text-gray-800 font-bold">Farmer</p>
+            </div>
+        </a>
+
+        <a href="./loginpageRetailer.html">
+            <div class="w-32 h-40 bg-white shadow-lg rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-yellow-200 transition duration-500 transform hover:scale-110" onclick="selectRole('Retailer')">
+                <span class="text-5xl animate-bounce">👨‍💼💵</span>
+                <p class="mt-2 text-gray-800 font-bold">Retailer</p>
+            </div>
+        </a>
+
+        <a href="./loginpagecustomer.html" class="col-span-2 mx-auto">
+            <div class="w-40 h-40 bg-white shadow-lg rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-blue-200 transition duration-500 transform hover:scale-110" onclick="selectRole('Consumer')">
+                <span class="text-5xl animate-bounce">🤝💰</span>
+                <p class="mt-2 text-gray-800 font-bold">Consumer</p>
+            </div>
+        </a>
+</div>
+
+<script>
+    // function selectRole(role) {
+    //     alert("You selected: " + role);
+    // }
+</script>
+
+</body>
+</html>

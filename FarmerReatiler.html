@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer to Retailer Contact</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-green-100 min-h-screen flex flex-col items-center p-6">
+    
+    <!-- Navigation Bar -->
+    <nav class="w-full bg-green-700 p-4 text-white flex justify-between items-center">
+        <span class="text-xl font-bold">Farmer to Retailer Contact</span>
+        <input type="text" id="searchInput" placeholder="Search Retailers..." class="p-2 rounded-lg text-black" onkeyup="filterRetailers()">
+    </nav>
+    
+    <!-- Product Section -->
+    <section class="w-full max-w-6xl p-6 rounded-lg shadow-lg my-6 fade-in">
+        <h2 class="text-2xl font-semibold text-green-700 mb-4">Available Products</h2>
+        <div class="grid grid-cols-5 gap-4">
+            <div class="bg-red-200 p-4 rounded-lg shadow cursor-pointer hover-scale" onclick="showRetailers('Wheat')">
+                <h3 class="font-bold text-xl">Wheat</h3>
+                <p>Price: ₹30/kg</p>
+            </div>
+            <div class="bg-yellow-200 p-4 rounded-lg shadow cursor-pointer hover-scale" onclick="showRetailers('Rice')">
+                <h3 class="font-bold text-xl">Rice</h3>
+                <p>Price: ₹40/kg</p>
+            </div>
+            <div class="bg-blue-200 p-4 rounded-lg shadow cursor-pointer hover-scale" onclick="showRetailers('Corn')">
+                <h3 class="font-bold text-xl">Corn</h3>
+                <p>Price: ₹25/kg</p>
+            </div>
+            <div class="bg-purple-200 p-4 rounded-lg shadow cursor-pointer hover-scale" onclick="showRetailers('Barley')">
+                <h3 class="font-bold text-xl">Barley</h3>
+                <p>Price: ₹35/kg</p>
+            </div>
+            <div class="bg-green-200 p-4 rounded-lg shadow cursor-pointer hover-scale" onclick="showRetailers('Soybean')">
+                <h3 class="font-bold text-xl">Soybean</h3>
+                <p>Price: ₹50/kg</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Retailer List Section -->
+    <section class="w-full max-w-6xl bg-white p-6 rounded-lg shadow-lg my-6 fade-in">
+        <h2 class="text-2xl font-semibold text-green-700 mb-4">Retailers Looking to Buy</h2>
+        <div id="retailerList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <p class="text-gray-500">Click on a product to see relevant retailers.</p>
+        </div>
+    </section>
+    
+    <script>
+        const retailers = {
+            "Wheat": [
+                { name: "Raj Traders", address: "Delhi", contact: "9876543210" },
+                { name: "Mohan Retail", address: "Mumbai", contact: "9823456789" },
+                { name: "Sharma Stores", address: "Bangalore", contact: "9811123456" },
+                { name: "Patel Mart", address: "Ahmedabad", contact: "9908765432" },
+                { name: "Singh Enterprises", address: "Kolkata", contact: "9987654321" }
+            ],
+            "Rice": [
+                { name: "Krishna Traders", address: "Pune", contact: "9876543210" },
+                { name: "Ravi Foods", address: "Hyderabad", contact: "9823456789" },
+                { name: "Mehta Stores", address: "Surat", contact: "9811123456" },
+                { name: "Gupta Enterprises", address: "Chennai", contact: "9908765432" },
+                { name: "Yadav Mart", address: "Lucknow", contact: "9987654321" }
+            ],
+            "Corn": [
+                { name: "Jain Agro", address: "Indore", contact: "9876543210" },
+                { name: "Fresh Mart", address: "Nagpur", contact: "9823456789" },
+                { name: "Kumar Groceries", address: "Patna", contact: "9811123456" },
+                { name: "Verma Traders", address: "Bhopal", contact: "9908765432" },
+                { name: "Agarwal Retail", address: "Jaipur", contact: "9987654321" }
+            ],
+            "Barley": [
+                { name: "Shah Mart", address: "Guwahati", contact: "9876543210" },
+                { name: "Das Agro", address: "Bhubaneswar", contact: "9823456789" },
+                { name: "Roy Foods", address: "Ranchi", contact: "9811123456" },
+                { name: "Mukherjee Traders", address: "Kochi", contact: "9908765432" },
+                { name: "Nair Retail", address: "Thiruvananthapuram", contact: "9987654321" }
+            ],
+            "Soybean": [
+                { name: "Fernandes Mart", address: "Goa", contact: "9876543210" },
+                { name: "Pawar Stores", address: "Nashik", contact: "9823456789" },
+                { name: "Bose Agro", address: "Kanpur", contact: "9811123456" },
+                { name: "Choudhary Traders", address: "Jodhpur", contact: "9908765432" },
+                { name: "Swamy Enterprises", address: "Mysore", contact: "9987654321" }
+            ]
+        };
+        
+        function showRetailers(product) {
+            const retailerList = document.getElementById("retailerList");
+            retailerList.innerHTML = retailers[product].map(r => `
+                <div class="bg-gray-100 p-4 rounded-lg shadow fade-in">
+                    <h3 class="font-bold text-xl">Retailer: ${r.name}</h3>
+                    <p>Address: ${r.address}</p>
+                    <p>Contact: ${r.contact}</p>
+                </div>
+            `).join('');
+        }
+        
+        function filterRetailers() {
+            let search = document.getElementById("searchInput").value.toLowerCase();
+            let retailerDivs = document.querySelectorAll("#retailerList div");
+            retailerDivs.forEach(div => {
+                div.style.display = div.innerText.toLowerCase().includes(search) ? "block" : "none";
+            });
+        }
+    </script>
+    
+    <!-- Footer -->
+    <footer class="text-center text-green-700 mt-6 fade-in">© 2025 Farmer Connect</footer>
+    
+</body>
+</html>

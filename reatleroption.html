@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("search");
+            const categories = document.querySelectorAll(".category-item");
+
+            searchInput.addEventListener("input", function () {
+                const filter = searchInput.value.toLowerCase();
+                categories.forEach(category => {
+                    const text = category.innerText.toLowerCase();
+                    if (text.includes(filter)) {
+                        category.style.display = "flex";
+                        category.classList.add("animate-pulse");
+                    } else {
+                        category.style.display = "none";
+                        category.classList.remove("animate-pulse");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body class=" bg-gradient-to-r from-green-100 to-green-300 h-screen w-screen flex items-center justify-center overflow-hidden">
+
+<div class="w-full h-full flex flex-col bg-white shadow-xl rounded-lg overflow-hidden animate-fade-in">
+
+    <!-- Header -->
+    <div class="bg-green-600 p-4 text-white">
+        <div class="flex justify-between items-center">
+            <h2 class="text-3xl font-bold text-red-500 mt-4 ">🌾GO<span class="text-blue-600">FaRm</span></h2>
+            <input id="search" type="text" placeholder="Search..." class="px-3 py-2 w-2/3 rounded-full text-gray-800 focus:outline-none">
+        </div>
+        <div class="flex justify-between mt-2">
+            <div>
+                🌍 Language:
+                <select class="bg-green-500 text-white px-2 py-1 rounded cursor-pointer">
+                    <option>English</option>
+                    <option>मराठी</option>
+                </select>
+            </div>
+            <span class="cursor-pointer text-xl">⚙️</span>
+        </div>
+    </div>
+
+    <!-- Category Section -->
+    <div class=" bg-gradient-to-r from-green-100 to-green-300 flex-grow overflow-y-auto p-4">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Categories</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <a href="http://localhost/farmer/afterclickanyfruteinnratler.php">
+                <div class="category-item bg-white rounded-lg shadow-md flex flex-col items-center p-4 hover:scale-105 transition duration-300">
+                    <img src="./image/frute.jpeg" alt="Fruits" class="w-20 h-20 mb-2 rounded-full">
+                    <span class="text-gray-800 font-medium">Fruits</span>
+                </div>
+            </a>
+            <a href="./vegitableRetalir.html">
+            <div class="category-item bg-white rounded-lg shadow-md flex flex-col items-center p-4 hover:scale-105 transition duration-300">
+                <img src="./image/vegitable.jpeg" alt="Vegetables" class="w-20 h-20 mb-2 rounded-full">
+                <span class="text-gray-800 font-medium">Vegetables</span>
+            </div>
+        </a>
+            <a href="./westreatler.html">
+                <div class="category-item bg-white rounded-lg shadow-md flex flex-col items-center p-4 hover:scale-105 transition duration-300">
+                    <img src="./image/weast.jpg" alt="Waste" class="w-20 h-20 mb-2 rounded-full">
+                    <span class="text-gray-800 font-medium">Waste</span>
+                </div>
+            </a>
+            <div class="category-item bg-white rounded-lg shadow-md flex flex-col items-center p-4 hover:scale-105 transition duration-300">
+                <img src="./image/dari.jpeg" alt="Dairy" class="w-20 h-20 mb-2 rounded-full">
+                <span class="text-gray-800 font-medium">Dairy</span>
+            </div>
+            <div class="category-item bg-white rounded-lg shadow-md flex flex-col items-center p-4 hover:scale-105 transition duration-300">
+                <img src="./image/sp.jpeg" alt="Spices" class="w-20 h-20 mb-2 rounded-full">
+                <span class="text-gray-800 font-medium">Spices</span>
+            </div>
+
+           
+    <a href="./index.html">
+
+                <div class="category-item bg-white rounded-lg shadow-md flex flex-col items-center p-4 hover:scale-105 transition duration-300">
+                    <img src="./image/market.jpeg" alt="Fruits" class="w-20 h-20 mb-2 rounded-full">
+                    <span class="text-gray-800 font-medium">Market</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+  <!-- Bottom Navbar -->
+  <div class="fixed bottom-0 w-full bg-white shadow-md flex justify-around py-3 border-t animate__animated animate__fadeInUp">
+    <a href="#" class="text-green-600 flex flex-col items-center">
+        <span class="text-2xl">🏠</span>
+        <span class="text-xs font-semibold">Home</span>
+    </a>
+    <a href="post.html" class="text-gray-600 flex flex-col items-center">
+        <span class="text-2xl">📝</span>
+        <span class="text-xs font-semibold">Post</span>
+    </a>
+    <a href="Ratilerchat.html" class="text-gray-600 flex flex-col items-center">
+        <span class="text-2xl">💬</span>
+        <span class="text-xs font-semibold">Chat</span>
+    </a>
+    <a href="ReatlaerAcc.html" class="text-gray-600 flex flex-col items-center">
+        <span class="text-2xl">👤</span>
+        <span class="text-xs font-semibold">Account</span>
+    </a>
+</div>
+
+</div>
+
+<style>
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+.animate-fade-in {
+    animation: fade-in 0.8s ease-in-out;
+}
+</style>
+
+</body>
+</html>

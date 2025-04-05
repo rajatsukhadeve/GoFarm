@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        
+    </style>
+    <script>
+       document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("search");
+    const categories = document.querySelectorAll(".category-item");
+
+    searchInput.addEventListener("input", function () {
+        const filter = searchInput.value.toLowerCase();
+        let visibleItems = 0;
+
+        categories.forEach(category => {
+            const text = category.innerText.toLowerCase();
+            if (text.includes(filter)) {
+                category.classList.remove("hidden");
+                category.classList.add("animate-pulse");
+                visibleItems++;
+            } else {
+                category.classList.add("hidden");
+                category.classList.remove("animate-pulse");
+            }
+        });
+
+        if (visibleItems === 0) {
+            document.getElementById("no-data").classList.remove("hidden");
+        } else {
+            document.getElementById("no-data").classList.add("hidden");
+        }
+    });
+});
+
+        const translations = {
+            "en": {
+                "products": "Products",
+                "waste-management": "Waste Management",
+                "crop-disease": "Crop Disease Detection",
+                "order-history": "Order History",
+                "transactions": "Transactions",
+                "market": "Market",
+                "home": "Home",
+                "post": "Post",
+                "chat": "Chat",
+                "account": "Account"
+            },
+            "mr": {
+                "products": "उत्पादने",
+                "waste-management": "कचरा व्यवस्थापन",
+                "crop-disease": "पिक रोग ओळख",
+                "order-history": "ऑर्डर इतिहास",
+                "transactions": "व्यवहार",
+                "market": "बाजार",
+                "home": "मुख्यपृष्ठ",
+                "post": "पोस्ट",
+                "chat": "चॅट",
+                "account": "खाते"
+            }
+        };
+
+        function changeLanguage(lang) {
+            Object.keys(translations[lang]).forEach(key => {
+                document.getElementById(key).innerText = translations[lang][key];
+            });
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-r from-green-100 to-green-300">
+<div class="bg-green-600 p-4 text-white">
+    <div class="flex justify-between items-center">
+        <h2 class="text-3xl font-bold text-red-500 mt-4 ">🌾GO<span class="text-blue-600">FaRm</span></h2>
+        <input id="search" type="text" placeholder="Search..." class="px-3 py-2 w-2/3 rounded-full text-gray-800 focus:outline-none">
+    </div>
+    <div class="flex justify-between mt-2">
+        <div>
+            🌍 Language:
+            <select class="bg-green-500 text-white px-2 py-1 rounded cursor-pointer" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="mr">मराठी</option>
+            </select>
+        </div>
+        <span class="cursor-pointer text-xl">⚙️</span>
+    </div>
+</div>
+
+<!-- Grid Categories -->
+<div class="grid grid-cols-3 gap-4 p-4">
+     
+    <a href="./inProduct.html">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 category-item">
+       
+            <img src="./image/vegitable.jpeg" class="w-24 h-24 rounded-full mx-auto border black">
+            <p class="mt-4 font-bold text-lg" id="products">Products</p>
+       
+    </div>
+     </a>
+     
+    <a href="./westmangmet.html">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 category-item">
+       
+            <img src="./image/weast.jpg" class="w-24 h-24 rounded-full mx-auto shadow-xl">
+            <p class="mt-4 font-bold text-lg" id="waste-management">Waste Management</p>
+       
+    </div>
+</a>
+   <a href="./afterCropDetction..html">
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 cursor-pointer category-item" onclick="openCamera()">
+        <img src="./image/diease.jpg" class="w-24 h-24 rounded-full mx-auto shadow-xl">
+        <p class="mt-4 font-bold text-lg" id="crop-disease">Crop Disease Detection</p>
+    </div>
+</a>
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 category-item">
+        <img src="./image/ordeH.jpeg" class="w-24 h-24 rounded-full mx-auto shadow-xl">
+        <p class="mt-4 font-bold text-lg" id="order-history">Order History</p>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 category-item">
+        <img src="./image/Transaction.jpeg" class="w-24 h-24 rounded-full mx-auto shadow-xl">
+        <p class="mt-4 font-bold text-lg" id="transactions">Transactions</p>
+    </div>
+
+    <a href="./index.html">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 category-item">
+            <img src="./image/market.jpeg" class="w-24 h-24 rounded-full mx-auto shadow-xl">
+            <p class="mt-4 font-bold text-lg" id="market">Market</p>
+        </div>
+    </a>
+
+    <div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 category-item">
+        <a href="./futureDemand.html">
+        <img src="./image/future.jpeg" class="w-24 h-24 rounded-full mx-auto shadow-xl ">
+        <p class="mt-4 font-bold text-lg" id="waste-management">Future Demand</p>
+    </a>
+</div>
+
+<div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 category-item">
+    <a href="./FarmerReatiler.html">
+    <img src="./Cerealsimage/OIP.jpeg" class="w-24 h-24 rounded-full mx-auto shadow-xl">
+    <p class="mt-4 font-bold text-lg" id="transactions">Retailer Contact</p>
+</a>
+</div>
+
+<a href="./NewsSction.html">
+<div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 category-item">
+        
+    <img src="./image/News.jpeg" class="w-24 h-24 rounded-full mx-auto shadow-xl ">
+    <p class="mt-4 font-bold text-lg" id="waste-management">NEWS</p>
+
+</div>
+</a>
+
+<div class="bg-white p-6 rounded-lg shadow-lg text-center hover:scale-105 transition-all duration-300 category-item">
+           <a href="./GovementSchem.html">
+    <img src="./image/govement.jpeg" class="w-24 h-24 rounded-full mx-auto shadow-xl ">
+    <p class="mt-4 font-bold text-lg" id="waste-management">Govt Schemes</p>
+</a>
+</div>
+</div>
+<!-- Bottom Navbar -->
+<div class="fixed bottom-0 w-full bg-white shadow-md flex justify-around py-3 border-t animate__animated animate__fadeInUp">
+    <a href="#" class="text-green-600 flex flex-col items-center">
+        <span class="text-2xl">🏠</span>
+        <span class="text-xs font-semibold">Home</span>
+    </a>
+    <a href="post.html" class="text-gray-600 flex flex-col items-center">
+        <span class="text-2xl">📝</span>
+        <span class="text-xs font-semibold">Post</span>
+    </a>
+    <a href="farmerCht.html" class="text-gray-600 flex flex-col items-center">
+        <span class="text-2xl">💬</span>
+        <span class="text-xs font-semibold">Chat</span>
+    </a>
+    <a href="farmerAccount.html" class="text-gray-600 flex flex-col items-center">
+        <span class="text-2xl">👤</span>
+        <span class="text-xs font-semibold">Account</span>
+    </a>
+</div>
+
+<script>
+ 
+</script>
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class=" bg-gradient-to-r from-green-100 to-green-300 min-h-screen flex flex-col font-sans">
+
+    <!-- Header -->
+    <div class="w-full flex items-center justify-between px-4 py-3 bg-white shadow-md animate__animated animate__fadeInDown sticky top-0 z-50">
+        <a href="./farmerWeb.html">
+            <button class="w-10 h-10 hover:scale-110 transition-transform duration-300 bg-green-100 rounded-full flex items-center justify-center shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="black"> 
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+        </a>
+        <span class="text-xl font-bold text-green-700 tracking-wide">Categories</span>
+        <div></div>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="flex-grow p-4 grid grid-cols-2 md:grid-cols-3 gap-6 animate__animated animate__fadeInUp">
+        <!-- Category Item -->
+        
+        <div class="bg-white rounded-xl p-6 flex flex-col items-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
+            <a href="./vegitable.html">
+            <span class="text-5xl">🥬</span>
+            <p class="mt-3 text-lg font-semibold text-gray-700">Vegetables</p>
+        </a>
+        </div>
+    
+
+        <div class="bg-white rounded-xl p-6 flex flex-col items-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer " 
+        onclick="window.location.href='http://localhost/farmer/fruits.php'">
+       <span class="text-7xl">🍎</span>
+       <p class="mt-3 text-lg font-semibold text-gray-700">Fruites</p>
+   </div>
+   
+        <div class="bg-white rounded-xl p-6 flex flex-col items-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
+           <a href="./edibleOil.html">
+            <span class="text-5xl">🛢️</span>
+            <p class="mt-3 text-lg font-semibold text-gray-700">Edible Oil</p>
+        </a>
+        </div>
+        <div class="bg-white rounded-xl p-6 flex flex-col items-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
+<a href="crels.html">           
+            <span class="text-5xl">🌾</span>
+            <p class="mt-3 text-lg font-semibold text-gray-700">Cereals</p>
+        </a>
+        </div>
+        <div class="bg-white rounded-xl p-6 flex flex-col items-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
+            <span class="text-5xl">🥛</span>
+            <p class="mt-3 text-lg font-semibold text-gray-700">Dairy Products</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 flex flex-col items-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
+            <span class="text-5xl">🌶️</span>
+            <p class="mt-3 text-lg font-semibold text-gray-700">Spices</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 flex flex-col items-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
+            <span class="text-5xl">🥜</span>
+            <p class="mt-3 text-lg font-semibold text-gray-700">Dry Fruits</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 flex flex-col items-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
+            <span class="text-5xl">🍊</span>
+            <p class="mt-3 text-lg font-semibold text-gray-700">Beans and Nuts</p>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fixed bottom-16 right-6 bg-green-700 text-white text-4xl rounded-full w-16 h-16 flex items-center justify-center shadow-xl hover:bg-green-800 transition-all duration-300 animate-bounce">
+        +
+    </button>
+
+    <!-- Bottom Navbar -->
+    <div class="fixed bottom-0 w-full bg-white shadow-md flex justify-around py-3 border-t animate__animated animate__fadeInUp">
+        <a href="#" class="text-green-600 flex flex-col items-center">
+            <span class="text-2xl">🏠</span>
+            <span class="text-xs font-semibold">Home</span>
+        </a>
+        <a href="post.html" class="text-gray-600 flex flex-col items-center">
+            <span class="text-2xl">📝</span>
+            <span class="text-xs font-semibold">Post</span>
+        </a>
+        <a href="farmerCht.html" class="text-gray-600 flex flex-col items-center">
+            <span class="text-2xl">💬</span>
+            <span class="text-xs font-semibold">Chat</span>
+        </a>
+        <a href="farmerAccount.html" class="text-gray-600 flex flex-col items-center">
+            <span class="text-2xl">👤</span>
+            <span class="text-xs font-semibold">Account</span>
+        </a>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Future Demand</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-green-100">
+
+  <!-- Govt Schemes Section -->
+  <div class="bg-white p-5 rounded-lg shadow-lg mb-10 animate__animated animate__fadeIn animate__slower">
+    <h2 class="text-2xl font-bold mb-4 text-green-600 animate__animated animate__bounceIn">Government Schemes 🌐</h2>
+    <select id="stateSelect" class="p-3 border rounded-lg w-full mb-5" onchange="filterSchemes()">
+      <option value="all">All States</option>
+      <option value="maharashtra">Maharashtra</option>
+      <option value="gujarat">Gujarat</option>
+      <option value="punjab">Punjab</option>
+      <option value="tamilnadu">Tamil Nadu</option>
+    </select>
+    <div id="schemeCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
+  </div>
+
+<script>
+  const schemes = {
+    maharashtra: [
+      { name: 'PM Kisan Yojana', link: 'https://pmkisan.gov.in/' },
+      { name: 'Soil Health Card Scheme', link: 'https://www.soilhealth.dac.gov.in/' },
+      { name: 'Drip Irrigation Subsidy', link: 'https://www.mahaagri.gov.in/' }
+    ],
+    gujarat: [
+      { name: 'Mukhyamantri Kisan Yojana', link: 'https://ikhedut.gujarat.gov.in/' },
+      { name: 'Krishi Input Subsidy', link: 'https://ikhedut.gujarat.gov.in/' },
+      { name: 'Organic Farming Subsidy', link: 'https://ikhedut.gujarat.gov.in/' }
+    ],
+    punjab: [
+      { name: 'Punjab Pani Bachao', link: 'https://agripb.gov.in/' },
+      { name: 'Crop Insurance Scheme', link: 'https://pmfby.gov.in/' },
+      { name: 'Agri Export Promotion', link: 'https://agriexport.gov.in/' }
+    ],
+    tamilnadu: [
+      { name: 'Tamil Nadu Agri Insurance', link: 'https://www.tnagrisnet.tn.gov.in/' },
+      { name: 'Drip Irrigation Scheme', link: 'https://www.tnagrisnet.tn.gov.in/' },
+      { name: 'Soil Health Card', link: 'https://www.soilhealth.dac.gov.in/' }
+    ]
+  };
+
+  Object.keys(schemes).forEach(state => {
+    schemes[state].forEach(({ name, link }) => {
+      document.getElementById('schemeCards').innerHTML += `
+        <div class="scheme bg-green-50 p-5 rounded-lg shadow-lg animate__animated animate__zoomIn" data-state="${state}">
+          <h3 class="text-xl font-bold">${name}</h3>
+          <p class="text-sm text-gray-600">Learn more about ${name}.</p>
+          <a href="${link}" target="_blank" class="text-green-600 underline">Apply Now</a>
+        </div>`;
+    });
+  });
+
+  function filterSchemes() {
+    const selectedState = document.getElementById('stateSelect').value;
+    const schemes = document.querySelectorAll('.scheme');
+    schemes.forEach(scheme => {
+      const state = scheme.getAttribute('data-state');
+      scheme.style.display = (selectedState === 'all' || selectedState === state) ? "block" : "none";
+    });
+  }
+</script>
+
+</body>
+</html>

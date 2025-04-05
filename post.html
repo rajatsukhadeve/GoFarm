@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Farm Voice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-100">
+
+<!-- Header -->
+<div class="bg-green-600 text-white text-center p-4 text-lg font-bold shadow-md animate-fade-down">
+  Farm Voice
+</div>
+
+<!-- Tabs -->
+<div class="flex border-b">
+  <button onclick="showTab('allPosts')" class="tab-btn active w-1/2 py-3 text-center font-semibold text-teal-600 border-b-4 border-teal-600 transition-all duration-300">
+    ALL POSTS
+  </button>
+  <button onclick="showTab('myPosts')" class="tab-btn w-1/2 py-3 text-center font-semibold text-gray-500 transition-all duration-300">
+    MY POSTS
+  </button>
+</div>
+
+<!-- Buttons -->
+<div class="flex justify-between p-4 text-teal-600 animate-fade-in">
+  <button onclick="openPostModal()" class="font-semibold hover:text-teal-800 transition-all duration-300">+ Start Writing</button>
+  <button class="font-semibold hover:text-teal-800 transition-all duration-300">🔍 Filter Posts</button>
+</div>
+
+<!-- Post Modal -->
+<div id="postModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <h2 class="text-lg font-bold mb-4">Create Post</h2>
+    <textarea id="postContent" class="w-full p-2 border rounded mb-4" placeholder="Write your post here..."></textarea>
+    <button onclick="submitPost()" class="bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-all">Post</button>
+    <button onclick="closePostModal()" class="ml-2 text-red-500">Cancel</button>
+  </div>
+</div>
+
+<!-- All Posts Section -->
+<div id="allPosts" class="p-4 animate-slide-in"></div>
+
+<!-- My Posts Section -->
+<div id="myPosts" class="p-4 animate-slide-in">
+  <!-- My posts will be loaded dynamically -->
+</div>
+
+<!-- Bottom Nav -->
+<div class="w-full fixed bottom-0 bg-white shadow-lg p-3 flex justify-around">
+  <button class="flex flex-col items-center text-green-500">
+    <a href="./reatleroption.html">🏠</a>
+    <span class="text-xs">Home</span>
+  </button>
+  <button class="flex flex-col items-center text-gray-600">
+    <span>📝</span>
+    <span class="text-xs">Post</span>
+  </button>
+  <button class="flex flex-col items-center text-gray-600">
+    <a href="Ratilerchat.html">💬</a>
+    <span class="text-xs">Chat</span>
+  </button>
+  <button class="flex flex-col items-center text-green-500">
+    <a href="ReatlaerAcc.html">👤</a>
+    <span class="text-xs">Account</span>
+  </button>
+</div>
+
+<!-- JavaScript -->
+<script>
+  let likedPosts = new Set();
+  let myPostIds = new Set(); // Track posts created by the user
+  
+  // Initialize with sample posts
+  window.onload = function() {
+    // Sample posts data
+    const samplePosts = [
+      {
+        id: 1001,
+        content: "My wheat crop is showing signs of rust disease. Has anyone tried any organic remedies for this issue?",
+        author: "Experienced Farmer",
+        date: "April 3, 2025",
+        likes: 5,
+        comments: ["Try neem oil spray mixed with garlic extract, worked well for me last season.", "Rotate your crops next season, it helps prevent rust buildup in the soil."]
+      },
+      {
+        id: 1002,
+        content: "Just installed a new drip irrigation system and it's already saving me 30% water! Happy to share details with anyone interested.",
+        author: "Tech Farmer",
+        date: "April 2, 2025",
+        likes: 8,
+        comments: ["Which brand did you install?", "How much was the installation cost?"]
+      },
+      {
+        id: 1003,
+        content: "Weather forecast shows early monsoon this year. Start preparing your fields early, everyone!",
+        author: "Weather Watcher",
+        date: "April 1, 2025",
+        likes: 12,
+        comments: ["Thanks for the heads up!", "Already started reinforcing my drainage systems."]
+      }
+    ];
+
+    // Add sample posts to allPosts section
+    samplePosts.forEach(post => {
+      addPostToDOM(post, false);
+    });
+    
+    // Update empty state for myPosts
+    updateMyPostsEmptyState();
+  }
+
+  function showTab(tab) {
+    document.getElementById("allPosts").classList.toggle("hidden", tab !== 'allPosts');
+    document.getElementById("myPosts").classList.toggle("hidden", tab !== 'myPosts');
+
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => {
+      btn.classList.remove('active', 'text-teal-600', 'border-b-4', 'border-teal-600');
+      btn.classList.add('text-gray-500');
+    });
+    
+    buttons.forEach(btn => {
+      if (btn.getAttribute("onclick").includes(tab)) {
+        btn.classList.add('active', 'text-teal-600', 'border-b-4', 'border-teal-600');
+        btn.classList.remove('text-gray-500');
+      }
+    });
+  }
+
+  function openPostModal() {
+    document.getElementById("postModal").classList.remove("hidden");
+  }
+
+  function closePostModal() {
+    document.getElementById("postModal").classList.add("hidden");
+  }
+
+  function submitPost() {
+    const content = document.getElementById("postContent").value;
+    if (!content.trim()) return;
+
+    const postId = Date.now();
+    
+    // Create post object
+    const post = {
+      id: postId,
+      content: content,
+      author: "New Farmer",
+      date: new Date().toLocaleDateString(),
+      likes: 0,
+      comments: []
+    };
+
+    // Add to DOM (both sections)
+    addPostToDOM(post, true);
+    
+    // Track as user's own post
+    myPostIds.add(postId);
+    
+    // Clear form and close modal
+    document.getElementById("postContent").value = "";
+    closePostModal();
+    
+    // Update empty state for myPosts
+    updateMyPostsEmptyState();
+  }
+
+  function addPostToDOM(post, isMyPost) {
+    // Create post HTML
+    const postHTML = `
+      <div class="bg-white shadow-lg rounded-lg mb-4 p-4" id="post-${post.id}">
+        <div class="flex items-center">
+          <img src="https://i.ibb.co/QF5XWFT/user.png" class="w-10 h-10 rounded-full animate-bounce-slow" alt="">
+          <div class="ml-3">
+            <p class="font-bold text-teal-600">${post.author}</p>
+            <p class="text-sm text-gray-500">${post.date}</p>
+          </div>
+        </div>
+        <p class="mt-2 text-gray-700">${post.content}</p>
+        <div class="flex justify-between items-center text-sm text-gray-500 mt-2">
+          <span onclick="likePost(${post.id})" id="like-${post.id}" class="cursor-pointer">👍 ${post.likes}</span>
+          <span onclick="openCommentBox(${post.id})" class="cursor-pointer">💬 ${post.comments.length} Comments</span>
+        </div>
+        <div id="comments-${post.id}" class="hidden mt-3">
+          ${post.comments.map(comment => `<p class="text-sm text-gray-700 mt-2">${comment}</p>`).join('')}
+          <textarea class="w-full p-2 border rounded mb-2 mt-2" placeholder="Write your comment..."></textarea>
+          <button onclick="submitComment(${post.id})" class="bg-teal-600 text-white px-4 py-1 rounded">Comment</button>
+        </div>
+      </div>`;
+
+    // Add to allPosts section
+    document.getElementById("allPosts").insertAdjacentHTML("afterbegin", postHTML);
+    
+    // Add to myPosts section if it's the user's post
+    if (isMyPost) {
+      document.getElementById("myPosts").insertAdjacentHTML("afterbegin", postHTML);
+    }
+    
+    // Mark as liked if necessary
+    if (post.likes > 0 && !isMyPost) {
+      likedPosts.add(post.id);
+    }
+  }
+
+  function likePost(postId) {
+    if (likedPosts.has(postId)) return;
+    likedPosts.add(postId);
+
+    // Update like count in allPosts section
+    const allPostsLikeSpan = document.querySelector(`#allPosts #like-${postId}`);
+    if (allPostsLikeSpan) {
+      let likes = parseInt(allPostsLikeSpan.textContent.split(' ')[1]);
+      likes++;
+      allPostsLikeSpan.textContent = `👍 ${likes}`;
+    }
+    
+    // Update like count in myPosts section if present
+    const myPostsLikeSpan = document.querySelector(`#myPosts #like-${postId}`);
+    if (myPostsLikeSpan) {
+      let likes = parseInt(myPostsLikeSpan.textContent.split(' ')[1]);
+      likes++;
+      myPostsLikeSpan.textContent = `👍 ${likes}`;
+    }
+  }
+
+  function openCommentBox(postId) {
+    // Toggle comments in allPosts section
+    const allPostsComments = document.querySelector(`#allPosts #comments-${postId}`);
+    if (allPostsComments) {
+      allPostsComments.classList.toggle("hidden");
+    }
+    
+    // Toggle comments in myPosts section
+    const myPostsComments = document.querySelector(`#myPosts #comments-${postId}`);
+    if (myPostsComments) {
+      myPostsComments.classList.toggle("hidden");
+    }
+  }
+
+  function submitComment(postId) {
+    const allPostsCommentBox = document.querySelector(`#allPosts #comments-${postId} textarea`);
+    const myPostsCommentBox = document.querySelector(`#myPosts #comments-${postId} textarea`);
+    
+    let commentText = '';
+    
+    // Get comment text from either section
+    if (allPostsCommentBox && allPostsCommentBox.value.trim()) {
+      commentText = allPostsCommentBox.value.trim();
+    } else if (myPostsCommentBox && myPostsCommentBox.value.trim()) {
+      commentText = myPostsCommentBox.value.trim();
+    }
+    
+    if (!commentText) return;
+    
+    // Create comment HTML
+    const commentHTML = `<p class="text-sm text-gray-700 mt-2">${commentText}</p>`;
+    
+    // Add comment to allPosts section
+    const allPostsCommentSection = document.querySelector(`#allPosts #comments-${postId}`);
+    if (allPostsCommentSection) {
+      allPostsCommentSection.insertAdjacentHTML("beforeend", commentHTML);
+      if (allPostsCommentBox) allPostsCommentBox.value = "";
+    }
+    
+    // Add comment to myPosts section
+    const myPostsCommentSection = document.querySelector(`#myPosts #comments-${postId}`);
+    if (myPostsCommentSection) {
+      myPostsCommentSection.insertAdjacentHTML("beforeend", commentHTML);
+      if (myPostsCommentBox) myPostsCommentBox.value = "";
+    }
+    
+    // Update comment count
+    updateCommentCount(postId);
+  }
+  
+  function updateCommentCount(postId) {
+    // Count comments
+    const comments = document.querySelectorAll(`#allPosts #comments-${postId} p`);
+    const commentCount = comments.length;
+    
+    // Update comment count in allPosts section
+    const allPostsCommentSpan = document.querySelector(`#allPosts #post-${postId} .flex.justify-between span:last-child`);
+    if (allPostsCommentSpan) {
+      allPostsCommentSpan.textContent = `💬 ${commentCount} Comments`;
+    }
+    
+    // Update comment count in myPosts section
+    const myPostsCommentSpan = document.querySelector(`#myPosts #post-${postId} .flex.justify-between span:last-child`);
+    if (myPostsCommentSpan) {
+      myPostsCommentSpan.textContent = `💬 ${commentCount} Comments`;
+    }
+  }
+  
+  function updateMyPostsEmptyState() {
+    const myPostsSection = document.getElementById("myPosts");
+    
+    // Check if user has any posts
+    if (myPostIds.size === 0) {
+      // Show empty state
+      myPostsSection.innerHTML = `
+        <div class="text-center p-12 animate-slide-in">
+          <img src="https://via.placeholder.com/100" class="mx-auto">
+          <p class="text-lg font-semibold text-gray-700 mt-3">No posts yet</p>
+          <p class="text-sm text-gray-500">It seems you haven't created any post.</p>
+          <button onclick="openPostModal()" class="mt-5 bg-teal-600 text-white px-6 py-2 rounded-lg hover:bg-teal-700 transition-all duration-300">
+            Create a Post
+          </button>
+        </div>
+      `;
+    }
+  }
+</script>
+
+<!-- Custom Styles -->
+<style>
+  .active {
+    font-weight: bold;
+  }
+  @keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  .animate-bounce-slow {
+    animation: bounce-slow 3s infinite;
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .animate-fade-in {
+    animation: fade-in 1s ease-in-out;
+  }
+  @keyframes slide-in {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .animate-slide-in {
+    animation: slide-in 0.8s ease-out;
+  }
+</style>
+
+</body>
+</html>

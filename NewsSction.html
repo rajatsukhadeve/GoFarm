@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer News Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #e9f7ef;
+        }
+        
+        .header {
+            background-color: #27ae60;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            gap: 10px;
+        }
+        
+        select, button {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: #27ae60;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #219653;
+        }
+        
+        .news-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .news-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 15px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .card-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .card-date {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .card-tag {
+            display: inline-block;
+            background-color: #e3f2fd;
+            color: #2196f3;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .read-more {
+            text-decoration: none;
+            color: #27ae60;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .read-more:hover {
+            text-decoration: underline;
+        }
+        
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 40px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .news-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .news-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            select, button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                <path d="M18 14h-8"></path>
+                <path d="M15 18h-5"></path>
+                <path d="M10 6h8v4h-8V6Z"></path>
+            </svg>
+            Latest Farming News
+        </h1>
+    </header>
+    
+    <div class="controls">
+        <select id="language-select">
+            <option value="mr">मराठी (Marathi)</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="en">English</option>
+        </select>
+        <button id="search-btn">Search</button>
+    </div>
+    
+    <div class="news-container" id="news-container">
+        <!-- News cards will be added here dynamically -->
+    </div>
+    
+
+    <script>
+        // Sample news data in multiple languages
+        const newsData = {
+            en: [
+                {
+                    id: 1,
+                    title: "New Drought-Resistant Wheat Variety Released",
+                    description: "Scientists have developed a new wheat variety that can withstand severe drought conditions while maintaining high yield potential.",
+                    image: "./image/1.jpg",
+                    date: "April 1, 2025",
+                    tags: ["Crops", "Research"]
+                },
+                {
+                    id: 2,
+                    title: "Government Announces Subsidy for Organic Farming",
+                    description: "The Agriculture Ministry has announced a new subsidy scheme to promote organic farming practices across the country.",
+                    image: "./image/2.jpg",
+                    date: "March 28, 2025",
+                    tags: ["Policy", "Organic"]
+                },
+                {
+                    id: 3,
+                    title: "Modern Irrigation Techniques Workshop Next Month",
+                    description: "A series of workshops on efficient irrigation techniques will be held in various agricultural districts starting next month.",
+                    image: "./image/3.jpg",
+                    date: "March 25, 2025",
+                    tags: ["Training", "Irrigation"]
+                },
+                {
+                    id: 4,
+                    title: "Record Tomato Yield With New Farming Method",
+                    description: "Local farmer achieves record-breaking tomato yield using innovative cultivation techniques and natural pest control.",
+                    image: "/./image/4.jpg",
+                    date: "March 22, 2025",
+                    tags: ["Success Story", "Vegetables"]
+                },
+                {
+                    id: 5,
+                    title: "New Solar-Powered Irrigation System for Small Farms",
+                    description: "Affordable solar-powered irrigation systems designed specifically for small-scale farmers are now available with government subsidies.",
+                    image: "./image/5.jpg",
+                    date: "March 18, 2025",
+                    tags: ["Technology", "Irrigation"]
+                },
+                {
+                    id: 6,
+                    title: "Weather Alert: Early Monsoon Prediction This Year",
+                    description: "Meteorological Department predicts an early monsoon arrival this year. Farmers advised to prepare fields accordingly.",
+                    image: "./image/6.jpg",
+                    date: "March 15, 2025",
+                    tags: ["Weather", "Advisory"]
+                }
+            ],
+            hi: [
+                {
+                    id: 1,
+                    title: "सूखा प्रतिरोधी गेहूं की नई किस्म जारी",
+                    description: "वैज्ञानिकों ने एक नई गेहूं की किस्म विकसित की है जो उच्च उपज क्षमता को बनाए रखते हुए गंभीर सूखे की स्थिति का सामना कर सकती है।",
+                    image: "./image/1.jpg",
+                    date: "1 अप्रैल, 2025",
+                    tags: ["फसल", "अनुसंधान"]
+                },
+                {
+                    id: 2,
+                    title: "सरकार ने जैविक खेती के लिए सब्सिडी की घोषणा की",
+                    description: "कृषि मंत्रालय ने देश भर में जैविक खेती प्रथाओं को बढ़ावा देने के लिए एक नई सब्सिडी योजना की घोषणा की है।",
+                    image: "./image/2.jpg",
+                    date: "28 मार्च, 2025",
+                    tags: ["नीति", "जैविक"]
+                },
+                {
+                    id: 3,
+                    title: "अगले महीने आधुनिक सिंचाई तकनीकों पर कार्यशाला",
+                    description: "कुशल सिंचाई तकनीकों पर कार्यशालाओं की एक श्रृंखला अगले महीने से विभिन्न कृषि जिलों में आयोजित की जाएगी।",
+                    image: "./image/3.jpg",
+                    date: "25 मार्च, 2025",
+                    tags: ["प्रशिक्षण", "सिंचाई"]
+                },
+                {
+                    id: 4,
+                    title: "नई खेती विधि से टमाटर की रिकॉर्ड पैदावार",
+                    description: "स्थानीय किसान ने नवीन खेती तकनीकों और प्राकृतिक कीट नियंत्रण का उपयोग करके टमाटर की रिकॉर्ड तोड़ पैदावार हासिल की।",
+                    image: "./image/4.jpg",
+                    date: "22 मार्च, 2025",
+                    tags: ["सफलता की कहानी", "सब्जियां"]
+                },
+                {
+                    id: 5,
+                    title: "छोटे किसानों के लिए सौर ऊर्जा संचालित सिंचाई प्रणाली",
+                    description: "छोटे किसानों के लिए विशेष रूप से डिज़ाइन की गई किफायती सौर ऊर्जा संचालित सिंचाई प्रणालियां अब सरकारी सब्सिडी के साथ उपलब्ध हैं।",
+                    image: "./image/5.jpg",
+                    date: "18 मार्च, 2025",
+                    tags: ["प्रौद्योगिकी", "सिंचाई"]
+                },
+                {
+                    id: 6,
+                    title: "मौसम अलर्ट: इस साल जल्दी मानसून का अनुमान",
+                    description: "मौसम विभाग ने इस साल मानसून के जल्दी आने की भविष्यवाणी की है। किसानों को तदनुसार खेतों की तैयारी करने की सलाह दी गई है।",
+                    image: "./image/6.jpg",
+                    date: "15 मार्च, 2025",
+                    tags: ["मौसम", "सलाह"]
+                }
+            ],
+            mr: [
+                {
+                    id: 1,
+                    title: "दुष्काळ प्रतिरोधक गव्हाची नवीन जात प्रसिद्ध",
+                    description: "शास्त्रज्ञांनी एक नवीन गव्हाची जात विकसित केली आहे जी उच्च उत्पादन क्षमता कायम ठेवत तीव्र दुष्काळ परिस्थितीला तोंड देऊ शकते.",
+                    image: "./image/1.jpg",
+                    date: "1 एप्रिल, 2025",
+                    tags: ["पीक", "संशोधन"]
+                },
+                {
+                    id: 2,
+                    title: "सरकारने सेंद्रिय शेतीसाठी अनुदानाची घोषणा केली",
+                    description: "कृषी मंत्रालयाने देशभरात सेंद्रिय शेती पद्धतींना प्रोत्साहन देण्यासाठी नवीन अनुदान योजनेची घोषणा केली आहे.",
+                    image: "./image/2.jpg",
+                    date: "28 मार्च, 2025",
+                    tags: ["धोरण", "सेंद्रिय"]
+                },
+                {
+                    id: 3,
+                    title: "पुढील महिन्यात आधुनिक सिंचन तंत्रज्ञान कार्यशाळा",
+                    description: "कार्यक्षम सिंचन तंत्रज्ञानावर कार्यशाळांची मालिका पुढील महिन्यापासून विविध कृषी जिल्ह्यांमध्ये आयोजित केली जाईल.",
+                    image: "./image/3.jpg",
+                    date: "25 मार्च, 2025",
+                    tags: ["प्रशिक्षण", "सिंचन"]
+                },
+                {
+                    id: 4,
+                    title: "नवीन शेती पद्धतीने टोमॅटोचे विक्रमी उत्पादन",
+                    description: "स्थानिक शेतकऱ्याने अभिनव लागवड तंत्र आणि नैसर्गिक कीड नियंत्रण वापरून टोमॅटोचे विक्रमी उत्पादन मिळवले.",
+                    image: "./image/4.jpg",
+                    date: "22 मार्च, 2025",
+                    tags: ["यशोगाथा", "भाजीपाला"]
+                },
+                {
+                    id: 5,
+                    title: "लहान शेतकऱ्यांसाठी सौर ऊर्जेवर चालणारी सिंचन प्रणाली",
+                    description: "लहान शेतकऱ्यांसाठी विशेष डिझाइन केलेल्या परवडणाऱ्या सौर ऊर्जेवर चालणाऱ्या सिंचन प्रणाली आता सरकारी अनुदानासह उपलब्ध आहेत.",
+                    image: "./image/5.jpg",
+                    date: "18 मार्च, 2025",
+                    tags: ["तंत्रज्ञान", "सिंचन"]
+                },
+                {
+                    id: 6,
+                    title: "हवामान अलर्ट: यंदा लवकर पावसाळ्याचा अंदाज",
+                    description: "हवामान विभागाने यंदा पावसाळा लवकर येण्याचा अंदाज वर्तवला आहे. शेतकऱ्यांना त्यानुसार शेती तयारीचा सल्ला देण्यात आला आहे.",
+                    image: "./image/6.jpg",
+                    date: "15 मार्च, 2025",
+                    tags: ["हवामान", "सल्ला"]
+                }
+            ]
+        };
+
+        // Function to display news based on selected language
+        function displayNews(language) {
+            const newsContainer = document.getElementById('news-container');
+            newsContainer.innerHTML = '';
+            
+            const news = newsData[language] || [];
+            
+            if (news.length === 0) {
+                newsContainer.innerHTML = `
+                    <div class="no-results">
+                        <h3>No news available in the selected language</h3>
+                        <p>Please try another language or check back later.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            news.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'news-card';
+                
+                let tagsHtml = '';
+                item.tags.forEach(tag => {
+                    tagsHtml += `<span class="card-tag">${tag}</span>`;
+                });
+                
+                card.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}" class="card-img">
+                    <div class="card-content">
+                        <h3 class="card-title">${item.title}</h3>
+                        <p class="card-desc">${item.description}</p>
+                        <div class="card-footer">
+                            <div>${tagsHtml}</div>
+                            <a href="#" class="read-more">Read more</a>
+                        </div>
+                        <p class="card-date">${item.date}</p>
+                    </div>
+                `;
+                
+                newsContainer.appendChild(card);
+            });
+        }
+        
+        // Event listener for the search button
+        document.getElementById('search-btn').addEventListener('click', function() {
+            const selectedLanguage = document.getElementById('language-select').value;
+            displayNews(selectedLanguage);
+        });
+        
+        // Initialize with default language (Marathi)
+        document.getElementById('language-select').value = 'mr';
+        displayNews('mr');
+    </script>
+</body>
+</html>

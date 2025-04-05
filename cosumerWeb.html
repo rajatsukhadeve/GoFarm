@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .glass { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.2); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-green-200 min-h-screen">
+    <nav class="bg-white shadow-lg sticky top-0 z-50 p-6 flex justify-between items-center">
+        <h2 class="text-3xl font-bold text-red-500">🌾GO<span class="text-blue-600">FaRm</span></h2>
+        <input type="text" id="searchBar" class="border p-2 rounded-lg" placeholder="Search products..." onkeyup="searchProducts()">
+        <button onclick="toggleCart()" class="bg-green-600 text-white px-6 py-2  rounded-full">
+            🛒 Cart (<span id="cartCount">0</span>)
+        </button>
+    </nav>
+
+    <div class="text-center py-16">
+        <h1 class="text-6xl font-extrabold text-green-700">Fresh from Consumer 🥦🍎</h1>
+    </div>
+
+    <div class="flex gap-4 justify-center mb-8">
+        <button onclick="filterProducts('Vegetables')" class="bg-green-600 text-white px-6 py-2 rounded-full">Vegetables</button>
+        <button onclick="filterProducts('Fruits')" class="bg-green-600 text-white px-6 py-2 rounded-full">Fruits</button>
+        <button onclick="filterProducts('Spices')" class="bg-green-600 text-white px-6 py-2 rounded-full">Spices</button>
+        <button onclick="filterProducts('Dry Fruits')" class="bg-green-600 text-white px-6 py-2 rounded-full">Dry Fruits</button>
+    </div>
+
+    <div id="productsGrid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 p-4"></div>
+
+    <!-- Cart Sidebar -->
+    <div id="cartSidebar" class="fixed top-0 right-0 w-full z-50 md:w-1/3 bg-white h-full shadow-2xl p-6 transform translate-x-full transition-transform duration-300 z-20">
+      <h2 class="text-3xl font-bold mb-6 text-green-700">🛒 Your Cart</h2>
+      <div id="cartItems" class="text-gray-700"></div>
+      <p id="totalAmount" class="text-2xl font-bold mt-6 text-green-700">Total: ₹0</p>
+      <button class="bg-green-600 text-white px-6 py-3 rounded-full mt-4 w-full" onclick="payment()">Pay Now 💳</button>
+      <button class="bg-red-500 text-white px-6 py-2 rounded-full mt-4 w-full" onclick="toggleCart()">Close ❌</button>
+  </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+        let total = Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        const products = {
+            'Vegetables': [
+                { name: 'Tomato', price: 40, image: 'image/tomato.jpeg' },
+                { name: 'Carrot', price: 50, image: 'image/carrot.jpeg' },
+                { name: 'Onion', price: 40, image: 'image/onin.jpeg' },
+                { name: 'Onion', price: 40, image: 'image/cpasicum.jpeg' },
+                { name: 'Potato', price: 40, image: 'image/potato.jpeg' },
+                { name: 'Spinach', price: 40, image: 'image/spinach.jpeg' },
+                { name: 'Cabbage', price: 30, image: 'image/cabbage.jpeg' },
+                { name: 'Broccoli', price: 80, image: 'image/Broccoli.jpg' },
+                { name: 'Cauliflower', price: 50, image: 'image/cauliflower.jpeg' },
+                { name: 'Garlic', price: 150, image: 'image/garlic.jpeg' }
+            ],
+            'Fruits': [
+                { name: 'Apple', price: 100, image: 'image/apple.jpeg' },
+                { name: 'Banana', price: 60, image: 'image/banan.jpeg' },
+                { name: 'Kiwi', price: 120, image: 'image/kivi.jpeg' },
+                { name: 'gauva', price: 120, image: 'image/gauva.jpeg' },
+                { name: 'Mango', price: 90, image: 'image/mango.jpeg' }
+            ],
+            'Spices': [
+                { name: 'Ginger', price: 200, image: 'image/ginger.jpeg' },
+                { name: 'Cumin', price: 80, image: 'image/cumin.jpeg' }
+            ],
+            'Dry Fruits': [
+                { name: 'Almonds', price: 700, image: 'image/almonds.jpeg' },
+                { name: 'Cashew', price: 900, image: 'image/cashew.jpeg' }
+            ]
+        };
+
+        const allProducts = Object.values(products).flat();
+
+        function loadProducts(category) {
+            let productsGrid = document.getElementById("productsGrid");
+            productsGrid.innerHTML = "";
+            products[category].forEach(product => {
+                let productHTML = `
+                    <div class='bg-white p-6 shadow-xl rounded-lg text-center'>
+                        <img src='${product.image}' class='h-40 w-40 mx-auto rounded-lg object-cover'>
+                        <h2 class='text-2xl font-bold mt-4'>${product.name}</h2>
+                        <p class='text-green-700 font-semibold'>₹${product.price} / Kg</p>
+                        <button class='bg-green-600 text-white px-6 py-2 rounded-full mt-4' onclick='addToCart("${product.name}", ${product.price})'>Add to Cart</button>
+                    </div>`;
+                productsGrid.innerHTML += productHTML;
+            });
+        }
+
+        function filterProducts(category) {
+            loadProducts(category);
+        }
+
+        function addToCart(product, price) {
+            if (!cart[product]) {
+                cart[product] = { price: price, quantity: 0 };
+            }
+            cart[product].quantity++;
+            total += price;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById("cartCount").innerText = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
+            document.getElementById("cartItems").innerHTML = Object.keys(cart)
+                .map(item => `${item} x${cart[item].quantity} = ₹${cart[item].quantity * cart[item].price}`)
+                .join('<br>') || "Your cart is empty";
+            document.getElementById("totalAmount").innerText = `Total: ₹${total}`;
+        }
+
+        function toggleCart() {
+            document.getElementById("cartSidebar").classList.toggle("translate-x-full");
+        }
+
+        function payment() {
+            if (total > 0) {
+                alert("Payment Successful ✅");
+                cart = {};
+                total = 0;
+                localStorage.removeItem('cart');
+                updateCartUI();
+                toggleCart();
+            } else {
+                alert("Your cart is empty!");
+            }
+        }
+
+        function searchProducts() {
+            let query = document.getElementById("searchBar").value.toLowerCase();
+            loadProducts('Vegetables'); // Default category
+            loadProducts('Fruits');
+        }
+
+        window.onload = () => filterProducts('Vegetables');
+        updateCartUI();
+
+        function removeFromCart(product) {
+            if (cart[product]) {
+                total -= cart[product].price;
+                cart[product].quantity--;
+                if (cart[product].quantity <= 0) {
+                    delete cart[product];
+                }
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            document.getElementById("cartCount").innerText = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
+            document.getElementById("cartItems").innerHTML = Object.keys(cart)
+                .map(item => `
+                    ${item} x${cart[item].quantity} = ₹${cart[item].quantity * cart[item].price} 
+                    <button onclick="removeFromCart('${item}')" class="bg-red-500 text-white px-2 py-1 rounded">Remove</button>
+                `)
+                .join('<br>') || "Your cart is empty";
+            document.getElementById("totalAmount").innerText = `Total: ₹${total}`;
+        }
+
+        function toggleCart() {
+            document.getElementById("cartSidebar").classList.toggle("translate-x-full");
+        }
+        
+
+        
+    </script>
+</body>
+</html>
