@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriCentral - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    keyframes: {
+                        fadeIn: {
+                            'from': { opacity: '0', transform: 'translateY(-30px)' },
+                            'to': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        spin: {
+                            'to': { transform: 'rotate(360deg)' }
+                        }
+                    },
+                    animation: {
+                        'fade': 'fadeIn 1.2s ease-in-out',
+                        'spinner': 'spin 1s linear infinite'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    </style>
+</head>
+<body class="bg-gradient-to-b from-green-100 to-white flex items-center justify-center h-screen font-['Poppins']">
+
+<div class="bg-white shadow-lg rounded-3xl p-10 w-full max-w-md animate-fade">
+    <div class="text-center">
+        <h2 class="text-3xl font-bold text-red-500 mt-4">🌾GO<span class="text-blue-600">FaRm</span></h2>
+        <p class="text-sm text-gray-500 mb-6">SMART FARMING FOR ALL</p>
+    </div>
+
+    <form id="login-form">
+        <div class="mb-4">
+            <label class="block text-sm font-semibold mb-2">Name<span class="text-red-500">*</span></label>
+            <input type="text" placeholder="Enter your name" id="name" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-sm font-semibold mb-2">Mobile Number<span class="text-red-500">*</span></label>
+            <div class="flex gap-2">
+                <input type="text" id="mobile" placeholder="Enter your mobile number" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none">
+                <button type="button" id="otpButton" onclick="sendOTP()" class="bg-green-600 text-white px-4 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out">Send OTP</button>
+            </div>
+            <p id="otpStatus" class="mt-2 text-sm"></p>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-sm font-semibold mb-2">OTP</label>
+            <div class="grid grid-cols-6 gap-3">
+                <input type="text" maxlength="1" class="otp w-12 h-12 text-center text-lg font-bold bg-green-100 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none">
+                <input type="text" maxlength="1" class="otp w-12 h-12 text-center text-lg font-bold bg-green-100 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none">
+                <input type="text" maxlength="1" class="otp w-12 h-12 text-center text-lg font-bold bg-green-100 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none">
+                <input type="text" maxlength="1" class="otp w-12 h-12 text-center text-lg font-bold bg-green-100 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none">
+                <input type="text" maxlength="1" class="otp w-12 h-12 text-center text-lg font-bold bg-green-100 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none">
+                <input type="text" maxlength="1" class="otp w-12 h-12 text-center text-lg font-bold bg-green-100 rounded-lg border focus:ring-2 focus:ring-green-500 outline-none">
+            </div>
+        </div>
+
+        <button type="button" id="signInButton" onclick="signIn()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out mt-6 shadow-lg font-medium">
+            Sign in 
+        </button>
+    </form>
+</div>
+
+<script>
+// API configuration
+const API_CONFIG = {
+    OTP_API_URL: "https://api.yourotpservice.com/send", // Replace with your actual OTP API endpoint
+    OTP_VERIFY_URL: "https://api.yourotpservice.com/verify", // Replace with your verification endpoint
+    API_KEY: "your-api-key-here" // Replace with your actual API key
+};
+
+let requestId = ''; // To store the request ID received from the OTP API
+
+async function sendOTP() {
+    const mobileNumber = document.getElementById('mobile').value;
+    const nameInput = document.getElementById('name').value;
+    const otpButton = document.getElementById('otpButton');
+    const otpStatus = document.getElementById('otpStatus');
+
+    if (!mobileNumber) {
+        otpStatus.textContent = 'Please enter a valid mobile number.';
+        otpStatus.className = 'mt-2 text-sm text-red-500';
+        return;
+    }
+
+    if (!nameInput) {
+        otpStatus.textContent = 'Please enter your name.';
+        otpStatus.className = 'mt-2 text-sm text-red-500';
+        return;
+    }
+
+    // Show loading state with Tailwind spinner
+    otpButton.disabled = true;
+    otpButton.innerHTML = '<svg class="animate-spinner inline h-4 w-4 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sending...';
+    otpStatus.textContent = '';
+    
+    try {
+        // API call to send OTP
+        const response = await fetch(API_CONFIG.OTP_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_CONFIG.API_KEY}`
+            },
+            body: JSON.stringify({
+                phoneNumber: mobileNumber,
+                name: nameInput,
+                channel: 'sms' // or 'whatsapp' depending on your API
+            })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Store request ID for verification
+            requestId = data.requestId || data.id || '';
+            
+            otpStatus.textContent = 'OTP sent successfully! Please check your phone.';
+            otpStatus.className = 'mt-2 text-sm text-green-600';
+            
+            // Focus on first OTP input
+            document.querySelector('.otp').focus();
+            
+            // Start countdown for resend (optional)
+            startResendCountdown();
+        } else {
+            throw new Error(data.message || 'Failed to send OTP');
+        }
+    } catch (error) {
+        console.error('Error sending OTP:', error);
+        otpStatus.textContent = `Error: ${error.message || 'Failed to send OTP. Please try again.'}`;
+        otpStatus.className = 'mt-2 text-sm text-red-500';
+    } finally {
+        // Reset button state after a delay
+        setTimeout(() => {
+            otpButton.disabled = false;
+            otpButton.textContent = 'Send OTP';
+        }, 2000);
+    }
+}
+
+function startResendCountdown() {
+    const otpButton = document.getElementById('otpButton');
+    let timeLeft = 30;
+    
+    otpButton.disabled = true;
+    otpButton.className = 'bg-gray-400 text-white px-4 rounded-lg transition duration-300 ease-in-out';
+    
+    const countdownInterval = setInterval(() => {
+        otpButton.textContent = `Resend (${timeLeft}s)`;
+        timeLeft--;
+        
+        if (timeLeft < 0) {
+            clearInterval(countdownInterval);
+            otpButton.disabled = false;
+            otpButton.textContent = 'Resend OTP';
+            otpButton.className = 'bg-green-600 text-white px-4 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out';
+        }
+    }, 1000);
+}
+
+async function signIn() {
+    const mobileNumber = document.getElementById('mobile').value;
+    const otpInputs = document.querySelectorAll('.otp');
+    const otp = Array.from(otpInputs).map(input => input.value).join('');
+    const signInButton = document.getElementById('signInButton');
+    const otpStatus = document.getElementById('otpStatus');
+
+    if (!mobileNumber || otp.length !== 6) {
+        otpStatus.textContent = 'Please enter a valid 6-digit OTP.';
+        otpStatus.className = 'mt-2 text-sm text-red-500';
+        return;
+    }
+
+    // Show loading state with Tailwind spinner
+    signInButton.disabled = true;
+    signInButton.innerHTML = '<svg class="animate-spinner inline h-4 w-4 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Verifying...';
+    
+    try {
+        // API call to verify OTP
+        const response = await fetch(API_CONFIG.OTP_VERIFY_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_CONFIG.API_KEY}`
+            },
+            body: JSON.stringify({
+                requestId: requestId,
+                phoneNumber: mobileNumber,
+                code: otp
+            })
+        });
+
+        const data = await response.json();
+        
+        if (response.ok && data.valid) {
+            otpStatus.textContent = 'OTP verified successfully!';
+            otpStatus.className = 'mt-2 text-sm text-green-600';
+            
+            // Success animation
+            signInButton.innerHTML = '<svg class="inline h-5 w-5 text-white mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> Success!';
+            signInButton.className = 'w-full bg-green-600 text-white py-3 rounded-lg mt-6 shadow-lg font-medium';
+            
+            // Redirect to the consumer web page after a short delay
+            setTimeout(() => {
+                window.location.href = './cosumerWeb.html';
+            }, 1000);
+        } else {
+            throw new Error(data.message || 'Invalid OTP');
+        }
+    } catch (error) {
+        console.error('Error verifying OTP:', error);
+        otpStatus.textContent = `Error: ${error.message || 'OTP verification failed. Please try again.'}`;
+        otpStatus.className = 'mt-2 text-sm text-red-500';
+        
+        // Reset button state
+        signInButton.disabled = false;
+        signInButton.innerHTML = 'Sign in';
+        signInButton.className = 'w-full bg-green-600 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300 ease-in-out mt-6 shadow-lg font-medium';
+    }
+}
+
+// Handle OTP input focus and automatic movement
+const otpInputs = document.querySelectorAll('.otp');
+otpInputs.forEach((input, index) => {
+    // Handle input changes
+    input.addEventListener('input', (e) => {
+        // Only allow numbers
+        input.value = input.value.replace(/[^0-9]/g, '');
+        
+        if (input.value.length === 1 && index < otpInputs.length - 1) {
+            otpInputs[index + 1].focus();
+        }
+    });
+    
+    // Handle backspace
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && input.value === '' && index > 0) {
+            otpInputs[index - 1].focus();
+        }
+    });
+    
+    // Handle paste event for OTP
+    input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData('text').trim();
+        
+        // Check if pasted content is a 6-digit number
+        if (/^\d{6}$/.test(pastedData)) {
+            // Distribute digits to input fields
+            for (let i = 0; i < Math.min(6, pastedData.length); i++) {
+                otpInputs[i].value = pastedData[i];
+            }
+            // Focus on the last field
+            otpInputs[Math.min(5, pastedData.length - 1)].focus();
+        }
+    });
+});
+</script>
+
+</body>
+</html>
